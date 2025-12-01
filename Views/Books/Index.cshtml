@@ -1,0 +1,75 @@
+@model IEnumerable<LibraryManagementSystem.Models.Book>
+
+@{
+    ViewData["Title"] = "Browse Books";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var isLoggedIn = Context.Session.GetString("LibraryId") != null;
+}
+
+<div class="container my-5">
+    <h3 class="text-primary text-center mb-4">
+        📚 Browse Books by Department
+    </h3>
+
+    <form asp-action="Index" method="get" class="d-flex justify-content-center mb-4">
+        <input type="text" name="search" class="form-control w-50 me-2" placeholder="Search books by title..." />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <div class="d-flex justify-content-center mb-4">
+        <div class="btn-group" role="group">
+            <a href="?department=All" class="btn btn-outline-secondary">All</a>
+            <a href="?department=CSE" class="btn btn-outline-secondary">CSE</a>
+            <a href="?department=IT" class="btn btn-outline-secondary">IT</a>
+            <a href="?department=Mechanical" class="btn btn-outline-secondary">Mechanical</a>
+            <a href="?department=Civil" class="btn btn-outline-secondary">Civil</a>
+            <a href="?department=Chemical" class="btn btn-outline-secondary">Chemical</a>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            var imagePath = book.ImageList.FirstOrDefault() ?? "/images/books/default-book.png";
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@imagePath"
+                         onerror="this.onerror=null; this.src='/images/books/default-book.png';"
+                         class="card-img-top"
+                         alt="@book.Title"
+                         style="height: 250px; object-fit: cover;" />
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text text-muted">Author: @book.Author</p>
+                        <p class="card-text">
+                            <strong>Status:</strong>
+                            @if (book.IsAvailable)
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Unavailable</span>
+                            }
+                        </p>
+                        <div class="mt-auto d-flex justify-content-between">
+                            <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-sm btn-info">More Details</a>
+                            @if (isLoggedIn)
+                            {
+                                <a href="@Url.Action("RequestIssue", "Books", new { id = book.Id })" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-plus"></i> Add Book
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="~/Account/Login" class="btn btn-sm btn-success" onclick="alert('Please login to add books!')">+ Add</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

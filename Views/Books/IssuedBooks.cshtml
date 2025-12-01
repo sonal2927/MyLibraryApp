@@ -1,0 +1,83 @@
+@model List<LibraryManagementSystem.Models.BookRecord>
+@{
+    ViewData["Title"] = "My Issued Books";
+    var now = DateTime.Now;
+    var hasOverdue = Model.Any(b => b.DueAt.HasValue && b.DueAt.Value.Date < now.Date);
+    int sr = 1;
+}
+
+<div class="container my-4">
+    <h2 class="text-primary mb-4">📚 My Issued Books</h2>
+
+    @if (hasOverdue)
+    {
+        <div class="alert alert-warning">
+            ⚠️ You have one or more overdue books. Please return or request renewal to avoid fines.
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">😐 You have no books issued currently.</div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Book Title</th>
+                    <th>Author</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    string statusText = "On Time";
+                    string statusColor = "success";
+
+                    if (record.DueAt.HasValue)
+                    {
+                        var daysLeft = (record.DueAt.Value.Date - now.Date).TotalDays;
+
+                        if (daysLeft < 0)
+                        {
+                            statusText = "Overdue";
+                            statusColor = "danger";
+                        }
+                        else if (daysLeft <= 2)
+                        {
+                            statusText = "Due Soon";
+                            statusColor = "warning";
+                        }
+                    }
+
+                    <tr>
+                        <td>@(sr++)</td>
+                        <td>@record.Book?.Title</td>
+                        <td>@record.Book?.Author</td>
+                        <td>@record.IssuedAt?.ToShortDateString()</td>
+                        <td>@record.DueAt?.ToShortDateString()</td>
+                        <td><span class="badge bg-@statusColor">@statusText</span></td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <form asp-action="RequestRenewal" asp-controller="Books" method="post">
+                                    <input type="hidden" name="recordId" value="@record.Id" />
+                                    <button class="btn btn-sm btn-outline-primary" type="submit">🔁 Request Renewal</button>
+                                </form>
+                                <form asp-action="RequestReturn" asp-controller="Books" method="post">
+                                    <input type="hidden" name="recordId" value="@record.Id" />
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">❌ Request Return</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

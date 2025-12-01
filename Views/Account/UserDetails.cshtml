@@ -1,0 +1,86 @@
+@model LibraryManagementSystem.Models.User
+
+@{
+    ViewData["Title"] = "User Details";
+    var books = ViewBag.Books as List<LibraryManagementSystem.Models.BookRecord>;
+    string searchTerm = ViewBag.SearchTerm as string ?? "";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">
+        <i class="fa-solid fa-id-card"></i> @Model.FullName's Profile
+    </h2>
+
+    <div class="row">
+        <!-- Personal Info -->
+        <div class="col-md-6 mb-4">
+            <h5>Personal Information</h5>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Library ID:</strong> @Model.LibraryId</li>
+                <li class="list-group-item"><strong>Role:</strong> @Model.Role</li>
+                <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                <li class="list-group-item"><strong>Phone:</strong> @Model.Phone</li>
+                <li class="list-group-item"><strong>Gender:</strong> @Model.Gender</li>
+                <li class="list-group-item"><strong>Department:</strong> @Model.Department</li>
+            </ul>
+        </div>
+
+        <!-- Issued Books Section -->
+        <div class="col-md-6 mb-4">
+            <h5 class="mb-3">Issued Books</h5>
+
+            <!-- Book Search -->
+            <form method="get" asp-action="UserDetails" asp-route-id="@Model.LibraryId" class="input-group mb-3">
+                <input name="search" class="form-control" placeholder="Search book..." value="@searchTerm" />
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </form>
+
+            <!-- Book Table -->
+            <table class="table table-bordered table-hover">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Title</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (books != null && books.Any())
+                    {
+                        foreach (var book in books)
+                        {
+                            <tr>
+                                <td>@(book.Book?.Title ?? "Unknown")</td>
+                                <td>@(book.IssuedAt?.ToString("dd MMM yyyy") ?? "-")</td>
+                                <td>@(book.DueAt?.ToString("dd MMM yyyy") ?? "-")</td>
+                                <td>
+                                    @if (book.IsSubmitted || book.ReturnedAt != null)
+                                    {
+                                        <span class="badge bg-success">✔ Submitted</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">❌ Not Submitted</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No books found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="text-center mt-4">
+        <a href="@Url.Action("UserInfo", "Account")" class="btn btn-secondary me-2">← Back</a>
+        <a href="@Url.Action("EditUser", "Account", new { id = Model.LibraryId })" class="btn btn-primary">✏️ Edit User</a>
+    </div>
+</div>

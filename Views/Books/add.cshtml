@@ -1,0 +1,88 @@
+@{
+    ViewData["Title"] = "Add Book by Category";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="text-primary fw-semibold">📚 Choose a Category to Add Books</h2>
+    </div>
+
+    <!-- Category Boxes -->
+    <div class="row justify-content-center mb-5">
+        @{
+            var categories = new[] {
+                new { Name = "Science", Emoji = "🔬" },
+                new { Name = "Love", Emoji = "❤️" },
+                new { Name = "Fiction", Emoji = "📖" },
+                new { Name = "History", Emoji = "🏛️" }
+            };
+        }
+
+        @foreach (var category in categories)
+        {
+            <div class="col-md-2 m-2">
+                <div class="card text-center shadow-sm category-card" data-category="@category.Name" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h5>@category.Emoji @category.Name</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Books List -->
+    <div id="bookList" class="row justify-content-center">
+        <!-- Dynamic book cards will appear here -->
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const booksByCategory = {
+            "Science": [
+                { title: "A Brief History of Time", author: "Stephen Hawking" },
+                { title: "The Selfish Gene", author: "Richard Dawkins" }
+            ],
+            "Love": [
+                { title: "The Notebook", author: "Nicholas Sparks" },
+                { title: "Me Before You", author: "Jojo Moyes" }
+            ],
+            "Fiction": [
+                { title: "Harry Potter", author: "J.K. Rowling" },
+                { title: "The Hobbit", author: "J.R.R. Tolkien" }
+            ],
+            "History": [
+                { title: "Sapiens", author: "Yuval Noah Harari" },
+                { title: "Guns, Germs, and Steel", author: "Jared Diamond" }
+            ]
+        };
+
+        // Attach click event to category cards
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const category = card.getAttribute('data-category');
+                const bookList = document.getElementById('bookList');
+                bookList.innerHTML = "";
+
+                if (category && booksByCategory[category]) {
+                    booksByCategory[category].forEach(book => {
+                        const card = document.createElement('div');
+                        card.className = "card col-md-4 m-3 shadow-sm";
+                        card.innerHTML = `
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">${book.title}</h5>
+                                <p class="card-text text-muted">Author: ${book.author}</p>
+                                <button class="btn btn-outline-success register-btn">➕ Add</button>
+                            </div>
+                        `;
+                        card.querySelector('.register-btn').addEventListener('click', function () {
+                            alert(`✅ "${book.title}" registered successfully!`);
+                        });
+                        bookList.appendChild(card);
+                    });
+                }
+            });
+        });
+    </script>
+}

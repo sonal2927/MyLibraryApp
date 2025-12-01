@@ -1,0 +1,34 @@
+[HttpGet]
+public async Task<IActionResult> RequestIssue(int id)
+{
+    var libraryId = HttpContext.Session.GetString("LibraryId");
+    if (string.IsNullOrEmpty(libraryId))
+        return RedirectToAction("Login", "Account");
+
+    var book = await _context.Books.FindAsync(id);
+    if (book == null) return NotFound();
+
+    // Check if already requested
+    bool alreadyRequested = _context.BookRecords.Any(r =>
+        r.BookId == id && r.LibraryId == libraryId && r.Status == BookStatus.Pending);
+
+    if (alreadyRequested)
+    {
+        TempData["Error"] = "You already have a pending request for this book.";
+        return RedirectToAction("Index");
+    }
+
+    var request = new BookRecord
+    {
+        BookId = id,
+        LibraryId = libraryId,
+        RequestedAt = DateTime.UtcNow,
+        Status = BookStatus.Pending
+    };
+
+    _context.BookRecords.Add(request);
+    await _context.SaveChangesAsync();
+
+    TempData["Success"] = "✅ Book request submitted successfully!";
+    return RedirectToAction("Index");
+}

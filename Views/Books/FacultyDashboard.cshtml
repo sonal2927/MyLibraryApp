@@ -1,0 +1,65 @@
+@model IEnumerable<LibraryManagementSystem.Models.BookRecord>
+@using LibraryManagementSystem.Models
+
+<h3 class="text-primary mb-3">📚 My Issued/Requested Books</h3>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No issued or requested books found.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 30%;">📖 Book</th>
+                    <th style="width: 15%;">📌 Status</th>
+                    <th style="width: 15%;">📅 Requested At</th>
+                    <th style="width: 15%;">🚚 Issued At</th>
+                    <th style="width: 15%;">⏳ Due At</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td>@(request.Book?.Title ?? "N/A")</td>
+                        <td>
+                            @switch (request.Status)
+                            {
+                                case BookStatus.Pending:
+                                    <span class="badge bg-warning text-dark">Pending</span>;
+                                    break;
+                                case BookStatus.Approved:
+                                    <span class="badge bg-success">Approved</span>;
+                                    break;
+                                case BookStatus.Issued:
+                                    <span class="badge bg-primary">Issued</span>;
+                                    break;
+                                case BookStatus.ReturnRequested:
+                                    <span class="badge bg-info text-dark">Return Requested</span>;
+                                    break;
+                                case BookStatus.RenewalRequested:
+                                    <span class="badge bg-secondary">Renewal Requested</span>;
+                                    break;
+                                case BookStatus.Returned:
+                                    <span class="badge bg-success">Returned</span>;
+                                    break;
+                                case BookStatus.Rejected:
+                                    <span class="badge bg-danger">Rejected</span>;
+                                    break;
+                                default:
+                                    <span class="badge bg-dark">Unknown</span>;
+                                    break;
+                            }
+                        </td>
+                        <td>@(request.RequestedAt?.ToString("dd MMM yyyy") ?? "-")</td>
+                        <td>@(request.IssuedAt?.ToString("dd MMM yyyy") ?? "-")</td>
+                        <td>@(request.DueAt?.ToString("dd MMM yyyy") ?? "-")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

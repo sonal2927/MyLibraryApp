@@ -1,0 +1,59 @@
+@model List<LibraryManagementSystem.Models.User>
+@{
+    ViewData["Title"] = "User Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var selectedRole = ViewBag.SelectedRole?.ToString() ?? "All";
+    var searchQuery = ViewBag.SearchQuery?.ToString() ?? "";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📋 User Information</h2>
+
+    <!-- 🔍 Filter & Search Form -->
+    <form method="get" asp-action="UserInfo" class="row justify-content-center mb-4">
+        <div class="col-md-3">
+            <select name="role" class="form-select" onchange="this.form.submit()">
+                <option value="All" selected="@(selectedRole == "All")">All</option>
+                <option value="Student" selected="@(selectedRole == "Student")">Student</option>
+                <option value="Faculty" selected="@(selectedRole == "Faculty")">Faculty</option>
+                <option value="Librarian" selected="@(selectedRole == "Librarian")">Librarian</option>
+            </select>
+        </div>
+        <div class="col-md-5">
+            <input type="text" name="search" value="@searchQuery" class="form-control" placeholder="Search by name, email or ID" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+
+    <!-- 👥 User Table -->
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Library ID</th>
+                <th>Role</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Gender</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr style="cursor: pointer;" onclick="window.location.href='@Url.Action("UserDetails", "Account", new { id = user.LibraryId })'">
+                    <td>@user.LibraryId</td>
+                    <td>@user.Role</td>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Phone</td>
+                    <td>@user.Gender</td>
+                    <td>@user.Department</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

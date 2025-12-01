@@ -1,0 +1,75 @@
+@model LibraryManagementSystem.Models.User
+@{
+    ViewData["Title"] = "👤 My Profile";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary">👤 My Profile</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="card shadow-sm w-75 mx-auto">
+        <div class="card-body row">
+            <div class="col-md-4 text-center">
+                <img src="~/images/profile-avatar.png" class="img-thumbnail mb-3" style="max-width: 150px;" alt="Profile Picture" />
+                <p class="text-muted">Profile Photo</p>
+            </div>
+
+            <div class="col-md-8">
+                <form method="post" asp-action="UpdateProfile">
+                    <input type="hidden" asp-for="LibraryId" />
+
+                    <div class="mb-2">
+                        <label><strong>Full Name:</strong></label>
+                        <p>@Model.FullName</p>
+                    </div>
+
+                    <div class="mb-2">
+                        <label><strong>Enrollment No.:</strong></label>
+                        <p>@Model.LibraryId</p>
+                    </div>
+
+                    <div class="mb-2">
+                        <label><strong>Email:</strong></label>
+                        <input class="form-control" asp-for="Email" />
+                    </div>
+
+                    <div class="mb-2">
+                        <label><strong>Department:</strong></label>
+                        <p>@Model.Department</p>
+                    </div>
+
+                    <div class="mb-2">
+                        <label><strong>Semester:</strong></label>
+                        <p>@Model.Semester</p>
+                    </div>
+
+                    <div class="mb-2">
+                        <label><strong>Mobile Number:</strong></label>
+                        <input class="form-control" asp-for="Contact" />
+                    </div>
+
+                    <div class="mb-2">
+                        <label><strong>Gender:</strong></label>
+                        <p>@Model.Gender</p>
+                    </div>
+
+                    <div class="mb-2">
+                        <label><strong>Date of Birth:</strong></label>
+                        <p>@Model.DOB?.ToString("dd-MMM-yyyy")</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label><strong>Address:</strong></label>
+                        <textarea class="form-control" asp-for="Address" rows="2"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Contact Us";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .contact-hero {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .contact-section {
+            padding: 40px 20px;
+        }
+
+        .contact-card {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .contact-icon {
+            font-size: 1.2rem;
+            color: #dd2476;
+        }
+    </style>
+}
+
+<div class="contact-hero">
+    <div class="container">
+        <h1 class="display-5 fw-bold">📞 Contact the Library</h1>
+        <p class="lead">We're here to help you. Reach out for assistance or support.</p>
+    </div>
+</div>
+
+<div class="contact-section container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 contact-card">
+            <h3 class="mb-4 text-center">Get in Touch</h3>
+
+            <div class="mb-3">
+                <i class="bi bi-envelope-fill contact-icon"></i>
+                <strong>Email:</strong>
+                <a href="mailto:info@svmit.ac.in" class="text-decoration-none"> info@svmit.ac.in</a>
+            </div>
+
+            <div class="mb-3">
+                <i class="bi bi-telephone-fill contact-icon"></i>
+                <strong>Phone:</strong> +91-2642-245864
+            </div>
+
+            <div class="mb-3">
+                <i class="bi bi-geo-alt-fill contact-icon"></i>
+                <strong>Address:</strong> College Campus, College Road, Bharuch 392001, Gujarat, India
+            </div>
+
+            <div class="mt-4">
+                <h5>Office Hours</h5>
+                <p>Monday – Friday: 8:30 AM to 4:00 PM</p>
+                <p>Saturday: 8:30 AM to 1:00 PM</p>
+            </div>
+        </div>
+    </div>
+</div>

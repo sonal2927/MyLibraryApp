@@ -1,0 +1,155 @@
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- FontAwesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+<style>
+    /* Fullscreen background image */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background: url('/images/backgrounds/login-bg.jpg') no-repeat center center fixed;
+        background-size: cover;
+        position: relative;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Dark overlay */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; 
+        left: 0;
+        width: 100%; 
+        height: 100%;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 0;
+    }
+
+    /* Content above overlay */
+    .page-content {
+        position: relative;
+        z-index: 1;
+        min-height: calc(100vh - 80px); /* navbar + footer adjust */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    /* Glass card */
+    .glass-card {
+        backdrop-filter: blur(15px);
+        background-color: rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 40px;
+        z-index: 10;
+        max-width: 450px;
+        width: 100%;
+    }
+
+    @@media (max-width: 768px) {
+        .glass-card {
+            padding: 25px;
+        }
+    }
+</style>
+
+
+<div class="container min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="col-md-6 glass-card">
+
+        <h2 class="text-center mb-4" style="color: #fff;"><i class="fa-solid fa-lock"></i> Welcome Back</h2>
+
+        <!-- Login Form -->
+        <form asp-action="Login" method="post" class="needs-validation" novalidate>
+
+            <!-- Role -->
+            <div class="form-group mb-3">
+                <label for="Role" class="form-label" style="color: #fff;">Login as</label>
+                <select class="form-select" id="Role" name="Role" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="Student">Student</option>
+                    <option value="Faculty">Faculty</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Librarian">Librarian</option>
+                </select>
+                <div class="invalid-feedback">Please select your role.</div>
+            </div>
+
+            <!-- Library ID -->
+            <div class="form-group mb-3">
+                <label for="LibraryId" class="form-label" style="color: #fff;">Library ID</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
+                    <input type="text" class="form-control" id="LibraryId" name="LibraryId" placeholder="Enter your Library ID" required />
+                </div>
+                <div class="invalid-feedback">Please enter your Library ID.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group mb-3">
+                <label for="Password" class="form-label" style="color: #fff;">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                    <input type="password" class="form-control" id="Password" name="Password" placeholder="Enter your password" required />
+                </div>
+                <div class="invalid-feedback">Please enter your password.</div>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="text-end mb-3">
+                <a href="/Account/ForgotPassword" style="color: #fff;">Forgot Password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <div class="form-group text-center mb-3">
+                <button type="submit" class="btn btn-glow w-100">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+                </button>
+            </div>
+        </form>
+
+        <!-- Register -->
+        <div class="text-center mt-3">
+            <span class="text-white-50">New user?</span>
+            <a href="/Account/Register" class="fw-bold text-white">Create an account</a>
+        </div>
+
+        <!-- Error message -->
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger text-center mt-3">
+                @ViewBag.Error
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(form => {
+                form.addEventListener('submit', e => {
+                    if (!form.checkValidity()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            })();
+        })();
+    </script>
+}

@@ -1,0 +1,152 @@
+@model LibraryManagementSystem.Models.ViewModels.DashboardViewModel
+@using LibraryManagementSystem.Models
+
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<div class="container my-4">
+
+    <h2 class="text-primary mb-3">Welcome, @(Model.User?.FullName ?? Model.User?.LibraryId ?? "Student") 👋</h2>
+
+    <!-- Section 1: Quick Access -->
+    <h4 class="mt-4 mb-3">🔗 Quick Access</h4>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <a asp-action="MyRequests" class="btn btn-outline-info w-100">📘 My Book Requests</a>
+        </div>
+        <div class="col-md-3">
+            <a asp-action="RequestBook" class="btn btn-outline-success w-100">➕ Request New Book</a>
+        </div>
+        <div class="col-md-3">
+            <a asp-action="ReadingHistory" class="btn btn-outline-dark w-100">📖 Reading History</a>
+        </div>
+        <div class="col-md-3">
+            <a asp-action="IssuedBooks" class="btn btn-outline-secondary w-100">📚 View Issued Books</a>
+        </div>
+    </div>
+
+    <!-- Section 2: My Issued Books -->
+    <h4 class="mt-4 mb-2">📚 My Issued Books</h4>
+
+    @if (Model.BookRequests == null || !Model.BookRequests.Any())
+    {
+        <div class="alert alert-info">You have no issued books.</div>
+    }
+    else
+    {
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Book</th>
+                    <th>Author</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model.BookRequests)
+                {
+                    var isOverdue = record.DueAt.HasValue && record.DueAt.Value.Date < DateTime.Now.Date;
+                    <tr class="@(isOverdue ? "table-danger" : "")">
+                        <td>@record.Book?.Title</td>
+                        <td>@record.Book?.Author</td>
+                        <td>@record.IssuedAt?.ToShortDateString()</td>
+                        <td>@record.DueAt?.ToShortDateString()</td>
+                        <td>
+                            @if (isOverdue)
+                            {
+                                <span class="badge bg-danger">Overdue</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">On Time</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <!-- Section 3: Featured Books -->
+    <h4 class="mt-5 mb-3">✨ Explore Library</h4>
+    @if (Model.FeaturedBooks != null && Model.FeaturedBooks.Any())
+    {
+        <div class="row">
+            @foreach (var book in Model.FeaturedBooks)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="~/images/books/@(book.ImagePath ?? "default-book.png")"
+                             alt="@book.Title"
+                             class="card-img-top"
+                             style="height: 200px; object-fit: cover;"
+                             onerror="this.src='/images/default-book.png';" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text text-muted">Author: @book.Author</p>
+                            <p>
+                                <strong>Status:</strong>
+                                @if (book.IsAvailable)
+                                {
+                                    <span class="badge bg-success">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Unavailable</span>
+                                }
+                            </p>
+                            <div class="mt-auto">
+                                <a asp-action="Details" asp-controller="Books" asp-route-id="@book.Id" class="btn btn-sm btn-primary">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <a href="/Books/Index" class="btn btn-outline-primary mt-2">🔍 View All Books</a>
+    }
+    else
+    {
+        <p>No featured books available at the moment.</p>
+    }
+
+    <!-- Section 4: Notifications -->
+    <h4 class="mt-5 mb-3">🔔 Notifications</h4>
+    @if (Model.Notifications != null && Model.Notifications.Any())
+    {
+        <ul class="list-group">
+            @foreach (var note in Model.Notifications)
+            {
+                <li class="list-group-item">@note</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted">No new notifications.</p>
+    }
+
+    <!-- Section 5: Quick Search -->
+    <h4 class="mt-5 mb-3">🔎 Quick Search</h4>
+    <form asp-action="Index" asp-controller="Books" method="get" class="input-group w-50 mb-4">
+        <input type="text" name="search" class="form-control" placeholder="Search by book title or author..." />
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+    </form>
+
+    <!-- Section 6: Profile Summary -->
+    <h4 class="mt-5 mb-3">👤 Profile Summary</h4>
+    <div class="card shadow-sm w-50">
+        <div class="card-body">
+            <p><strong>Name:</strong> @Model.User?.FullName</p>
+            <p><strong>Library ID:</strong> @Model.User?.LibraryId</p>
+            <p><strong>Department:</strong> @Model.User?.Department</p>
+            <a href="/Account/EditProfile" class="btn btn-sm btn-outline-primary">Edit Profile</a>
+        </div>
+    </div>
+
+</div>

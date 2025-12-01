@@ -1,0 +1,178 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+@{
+    string? role = HttpContextAccessor.HttpContext?.Session?.GetString("UserRole");
+    string? libraryId = HttpContextAccessor.HttpContext?.Session?.GetString("LibraryId");
+    bool isLoggedIn = !string.IsNullOrEmpty(role) && !string.IsNullOrEmpty(libraryId);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Library Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">📘 MyLibrary</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    @* Public Navigation (Before Login) *@
+                    @if (!isLoggedIn)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="AboutLibrary">📘 About Library</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="Index">📚 Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="Search">🔍 Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">🔐 Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Contact">📞 Contact Us</a>
+                        </li>
+                    }
+
+                    
+
+                    @if (Context.Session.GetString("UserRole") == "Student")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="StudentDashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="StudentBooks">Browse Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="IssuedBooks">My Issued Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="MyRequests">My Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="RequestBook">Request New Book</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="ReadingHistory">Reading History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="Profile">👤 My Profile</a>
+                        </li>
+
+                    }
+
+
+                    @* Admin Navigation *@
+                    @if (role == "Admin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Account/AdminApproval">👥 Approve Users</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Account/UserInfo">📋 User Info</a></li>
+                    }
+
+                    @* Faculty Navigation *@
+                    @if (role == "Faculty")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Account/FacultyDashboard">🏫 Faculty</a></li>
+                    }
+
+                    @* Librarian Navigation *@
+                    @if (role == "Librarian")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Account/LibrarianDashboard">📖 Librarian</a></li>
+                    }
+
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    @if (isLoggedIn)
+                    {
+                        <li class="nav-item me-2">
+                            <span class="navbar-text text-white">
+                                👋 @libraryId <span class="badge bg-info text-dark">@role</span>
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" asp-controller="Account" asp-action="Logout">
+                                <button type="submit" class="btn btn-sm btn-outline-light">🚪 Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-sm btn-outline-light" asp-controller="Account" asp-action="Login">🔐 Login</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        @RenderBody()
+    </div>
+
+    <footer class="text-center text-muted mt-4 mb-2">
+        <small>&copy; 2025 Library Management System</small>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+
+    <footer style="background: linear-gradient(135deg, #4B79A1, #283E51); color: white;" class="pt-4 pb-3 mt-5">
+        <div class="container text-center">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <h5 class="text-warning mb-3">📞 Contact Us</h5>
+                    <p>
+                        <i class="bi bi-envelope-fill me-1 text-light"></i>
+                        <a href="mailto:librarysupport@example.com" class="text-white text-decoration-none">info@svmit.ac.in</a><br />
+                        <i class="bi bi-telephone-fill me-1 text-light"></i> +91-2642245864
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-warning mb-3">📍 Location</h5>
+                    <p>
+                        <i class="bi bi-geo-alt-fill me-1 text-light"></i>College Campus, College Road<br />
+                         Bharuch 392001 (Gujarat), India
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-warning mb-3">🌐 Follow Us</h5>
+                    <a href="#" class="text-white me-3 fs-5"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="text-white me-3 fs-5"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="text-white fs-5"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+            <hr class="border-light" />
+            <p class="mb-0 text-light">&copy; 2025 <strong>Library Management System</strong>. Crafted with ❤️ for students and faculty.</p>
+        </div>
+    </footer>
+</body>
+</html>

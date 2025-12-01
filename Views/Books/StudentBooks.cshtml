@@ -1,0 +1,69 @@
+@model IEnumerable<LibraryManagementSystem.Models.Book>
+
+@{
+    ViewData["Title"] = "Explore Library Books";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📚 Explore Library Books</h2>
+
+    <!-- Filter and Search -->
+    <form asp-action="Books" method="get" class="row g-2 mb-4">
+        <div class="col-md-4">
+            <select class="form-select" name="category">
+                <option value="">All Categories</option>
+                <option>Science</option>
+                <option>Literature</option>
+                <option>Tech</option>
+                <option>Fiction</option>
+                <option>History</option>
+                <option>Commerce</option>
+                <option>Computer</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <input type="text" name="search" class="form-control" placeholder="🔍 Search by Title or Author" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+
+    <!-- Book Cards -->
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@book.ImagePath ?? "/images/default-book.png"" class="card-img-top" alt="@book.Title" style="height: 250px; object-fit: cover;" />
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text text-muted">Author: @book.Author</p>
+                        <p class="card-text"><strong>Category:</strong> @book.Department</p>
+                        <p class="card-text">
+                            <strong>Status:</strong>
+                            @if (book.IsAvailable)
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Issued</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination Placeholder -->
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled"><span class="page-link">Prev</span></li>
+            <li class="page-item active"><span class="page-link">1</span></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+</div>

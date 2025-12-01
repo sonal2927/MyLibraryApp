@@ -1,0 +1,98 @@
+@{
+    ViewData["Title"] = "About Library";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .about-hero {
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .about-section {
+            padding: 60px 20px;
+        }
+
+        .info-box {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .info-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-box h4 {
+            color: #4a00e0;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            padding-left: 20px;
+        }
+
+        .info-box ul li {
+            margin-bottom: 10px;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: #4a00e0;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+        }
+    </style>
+}
+
+<div class="about-hero">
+    <div class="container">
+        <h1 class="display-5 fw-bold">About SVMIT College Library 📚</h1>
+        <p class="lead">Empowering students and faculty with knowledge and resources</p>
+    </div>
+</div>
+
+<div class="about-section container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="info-box">
+                <h4><i class="icon bi bi-book"></i>Our Mission</h4>
+                <p>To provide easy access to learning materials, books, journals, and digital content to enhance the academic experience of students and faculty.</p>
+            </div>
+
+            <div class="info-box">
+                <h4><i class="icon bi bi-people-fill"></i>Who Can Use</h4>
+                <p>All registered students, faculty, staff, and administrators of SVMIT College can use this system to search, issue, and request books.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="info-box">
+                <h4><i class="icon bi bi-tools"></i>Services Offered</h4>
+                <ul>
+                    <li>Online Book Search & Request</li>
+                    <li>Book Issuing & Returning</li>
+                    <li>Reading History Tracking</li>
+                    <li>Request for New Books</li>
+                    <li>Admin & Librarian Management Panel</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4><i class="icon bi bi-clock-history"></i>Library Hours</h4>
+                <p><strong>Monday – Friday</strong><br />8:30 AM – 4:00 PM</p>
+                <p><strong>Saturday</strong><br />8:30 AM – 1:00 PM</p>
+            </div>
+        </div>
+    </div>
+</div>
