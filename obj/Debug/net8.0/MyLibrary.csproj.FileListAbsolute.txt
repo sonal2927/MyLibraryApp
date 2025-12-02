@@ -138,3 +138,4 @@ D:\MyLibrary\MyLibrary\obj\Debug\net8.0\refint\MyLibrary.dll
 D:\MyLibrary\MyLibrary\obj\Debug\net8.0\MyLibrary.pdb
 D:\MyLibrary\MyLibrary\obj\Debug\net8.0\MyLibrary.genruntimeconfig.cache
 D:\MyLibrary\MyLibrary\obj\Debug\net8.0\ref\MyLibrary.dll
+D:\MyLibrary\MyLibrary\obj\Debug\net8.0\MyLibrary.sourcelink.json
